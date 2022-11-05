@@ -76,3 +76,8 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# app
+app/.gitignore
+app/proguard-rules.pro
+app/build/
