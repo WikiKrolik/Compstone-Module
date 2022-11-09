@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.phonelocalization.databinding.FragmentFirstBinding
+import java.time.LocalDateTime
 
 
 /**
@@ -39,8 +40,8 @@ private var _binding: FragmentFirstBinding? = null
         val rssiFilter = IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
         requireActivity().registerReceiver(myRssiChangeReceiver, rssiFilter)
         val wifiMan = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
-        activity?.registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
         wifiMan.startScan()
+        activity?.registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
         //LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
       return binding.root
 
@@ -52,23 +53,24 @@ private var _binding: FragmentFirstBinding? = null
             wifiMan.startScan()
             val newRSSI : Int = wifiMan.connectionInfo.rssi
             binding.wifiData.text = newRSSI.toString()
+            binding.gyroscopeData.text = LocalDateTime.now().toString()
             wifiMan.startScan()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        //Note: Not using RSSI_CHANGED_ACTION because it never calls me back.
-        val rssiFilter = IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
-        requireActivity().registerReceiver(myRssiChangeReceiver, rssiFilter)
-        val wifiMan = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
-        wifiMan.startScan()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        //Note: Not using RSSI_CHANGED_ACTION because it never calls me back.
+//        val rssiFilter = IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+//        requireActivity().registerReceiver(myRssiChangeReceiver, rssiFilter)
+//        val wifiMan = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
+//        wifiMan.startScan()
+//    }
 
-    override fun onPause() {
-        super.onPause()
-        requireActivity().unregisterReceiver(myRssiChangeReceiver)
-    }
+//    override fun onPause() {
+//        super.onPause()
+//        requireActivity().unregisterReceiver(myRssiChangeReceiver)
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
