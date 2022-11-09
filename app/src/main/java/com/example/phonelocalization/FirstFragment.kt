@@ -39,7 +39,7 @@ private var _binding: FragmentFirstBinding? = null
         val rssiFilter = IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
         requireActivity().registerReceiver(myRssiChangeReceiver, rssiFilter)
         val wifiMan = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
-        //activity?.registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
+        activity?.registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
         wifiMan.startScan()
         //LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
       return binding.root
