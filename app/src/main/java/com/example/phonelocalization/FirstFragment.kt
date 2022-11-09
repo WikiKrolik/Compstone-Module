@@ -36,7 +36,11 @@ private var _binding: FragmentFirstBinding? = null
     ): View? {
 
       _binding = FragmentFirstBinding.inflate(inflater, container, false)
-        activity?.registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
+        val rssiFilter = IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+        requireActivity().registerReceiver(myRssiChangeReceiver, rssiFilter)
+        val wifiMan = requireActivity().getSystemService(Context.WIFI_SERVICE) as WifiManager
+        //activity?.registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
+        wifiMan.startScan()
         //LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myRssiChangeReceiver, IntentFilter(WifiManager.RSSI_CHANGED_ACTION))
       return binding.root
 
@@ -48,6 +52,7 @@ private var _binding: FragmentFirstBinding? = null
             wifiMan.startScan()
             val newRSSI : Int = wifiMan.connectionInfo.rssi
             binding.wifiData.text = newRSSI.toString()
+            wifiMan.startScan()
         }
     }
 
