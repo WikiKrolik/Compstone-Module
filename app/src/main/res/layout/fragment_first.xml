@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    <layout xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="accelerometer" type="com.example.phonelocalization.FirstFragment"/>
@@ -7,99 +8,98 @@
         <variable name="wifi" type="com.example.phonelocalization.FirstFragment"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+        android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
-    <TextView
-        android:id="@+id/accelerometer_text"
-        android:layout_width="202dp"
-        android:layout_height="36dp"
-        android:fontFamily="serif"
-        android:gravity="center"
-        android:text="Accelerometer:"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/accelerometer_data"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.666" />
+        <TextView
+            android:id="@+id/accelerometer_text"
+            android:layout_width="202dp"
+            android:layout_height="36dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:text="Accelerometer:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/accelerometer_data"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.915" />
 
-    <TextView
-        android:id="@+id/accelerometer_data"
-        android.text="@accelerometer"
-        android:layout_width="202dp"
-        android:layout_height="88dp"
-        android:fontFamily="serif"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="66dp" />
+        <TextView
+            android:id="@+id/accelerometer_data"
+            android.text="@accelerometer"
+            android:layout_width="202dp"
+            android:layout_height="88dp"
+            android:fontFamily="serif"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="155dp" />
 
-    <TextView
-        android:id="@+id/gyroscope_data"
-        android.text="@gyroscope"
-        android:layout_width="202dp"
-        android:layout_height="88dp"
-        android:fontFamily="serif"
-        android:layout_marginTop="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/wifi_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gyroscope_text"
-        app:layout_constraintVertical_bias="0.0"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/gyroscope_data"
+            android.text="@gyroscope"
+            android:layout_width="202dp"
+            android:layout_height="88dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="serif"
+            app:layout_constraintBottom_toTopOf="@+id/wifi_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gyroscope_text"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/wifi_data"
-        android.text="@wifi"
-        android:layout_width="202dp"
-        android:fontFamily="serif"
-        android:layout_height="88dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wifi_text"
-        app:layout_constraintVertical_bias="0.042"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/wifi_data"
+            android.text="@wifi"
+            android:layout_width="202dp"
+            android:layout_height="88dp"
+            android:fontFamily="serif"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/wifi_text"
+            app:layout_constraintVertical_bias="0.072"
+            tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/gyroscope_text"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:fontFamily="serif"
-        android:gravity="center"
-        android:layout_width="202dp"
-        android:layout_height="36dp"
-        android:text="Gyroscope:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accelerometer_data"
-        app:layout_constraintVertical_bias="0.059" />
+        <TextView
+            android:id="@+id/gyroscope_text"
+            android:layout_width="202dp"
+            android:layout_height="36dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:text="Gyroscope:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accelerometer_data"
+            app:layout_constraintVertical_bias="0.137" />
 
-    <TextView
-        android:id="@+id/wifi_text"
-        android:textStyle="bold"
-        android:fontFamily="serif"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:layout_width="202dp"
-        android:layout_height="36dp"
-        android:text="Wifi:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accelerometer_data"
-        app:layout_constraintVertical_bias="0.385" />
+        <TextView
+            android:id="@+id/wifi_text"
+            android:layout_width="202dp"
+            android:layout_height="36dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:text="Wifi:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accelerometer_data"
+            app:layout_constraintVertical_bias="0.585" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
