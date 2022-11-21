@@ -38,24 +38,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-/*
-        binding.apply {
-            toggle= ActionBarDrawerToggle(this@MainActivity,drawerLayout, R.string.open, R.string.close)
-            drawerLayout.addDrawerListener(toggle)
-            toggle.syncState()
-
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-            binding.navView.setNavigationItemSelectedListener {
-                it.isChecked = true
-                when(it.itemId){
-                    R.id.Start->{ replaceFragment(FirstFragment())}
-                    R.id.Map->{ replaceFragment(SecondFragment())}
-                    R.id.Results->{ Toast.makeText(this@MainActivity, "Results", Toast.LENGTH_SHORT).show()}
-                }
-                return@setNavigationItemSelectedListener true
-            }
-        }*/
     }
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
 //        // Inflate the menu; this adds items to the action bar if it is present.
@@ -63,12 +45,6 @@ class MainActivity : AppCompatActivity() {
 //        return true
 //    }
 
-/*    private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frameLayout, fragment)
-        fragmentTransaction.commit()
-    }*/
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

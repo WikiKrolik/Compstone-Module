@@ -6,6 +6,7 @@
         <variable name="accelerometer" type="com.example.phonelocalization.FirstFragment"/>
         <variable name="gyroscope" type="com.example.phonelocalization.FirstFragment"/>
         <variable name="wifi" type="com.example.phonelocalization.FirstFragment"/>
+        <variable name="magnetometer" type="com.example.phonelocalization.FirstFragment"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,30 +17,30 @@
             android:id="@+id/accelerometer_text"
             android:layout_width="202dp"
             android:layout_height="36dp"
+            android:layout_marginTop="52dp"
             android:fontFamily="serif"
             android:gravity="center"
             android:text="Accelerometer:"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/accelerometer_data"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.915" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/accelerometer_data"
             android.text="@accelerometer"
             android:layout_width="202dp"
             android:layout_height="88dp"
-            android:layout_marginBottom="116dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="serif"
-            app:layout_constraintBottom_toTopOf="@+id/gyroscope_text"
+            android:gravity="center"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accelerometer_text"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -47,14 +48,29 @@
             android.text="@gyroscope"
             android:layout_width="202dp"
             android:layout_height="88dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="serif"
-            app:layout_constraintBottom_toTopOf="@+id/wifi_text"
+            android:gravity="center"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gyroscope_text"
-            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/magnetometer_data"
+            android.text="@magnetometer"
+            android:layout_width="202dp"
+            android:layout_height="88dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/magnetometer_text"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -63,12 +79,14 @@
             android:layout_width="202dp"
             android:layout_height="88dp"
             android:fontFamily="serif"
+            android:gravity="center"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/wifi_text"
-            app:layout_constraintVertical_bias="0.072"
+            app:layout_constraintVertical_bias="0.034"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -82,10 +100,10 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accelerometer_data"
-            app:layout_constraintVertical_bias="0.137" />
+            app:layout_constraintTop_toBottomOf="@+id/wifi_data"
+            app:layout_constraintVertical_bias="0.084" />
 
         <TextView
             android:id="@+id/wifi_text"
@@ -101,7 +119,22 @@
             app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/accelerometer_data"
-            app:layout_constraintVertical_bias="0.153" />
+            app:layout_constraintVertical_bias="0.065" />
+
+        <TextView
+            android:id="@+id/magnetometer_text"
+            android:layout_width="202dp"
+            android:layout_height="36dp"
+            android:text="Magnetometer:"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gyroscope_data" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

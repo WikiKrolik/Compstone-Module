@@ -85,6 +85,7 @@ object SensorReader : SensorEventListener {
                     Magnetometer.z = event.values[2]
                 }
             }
+
         }
     }
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {

@@ -47,6 +47,18 @@ class FirstFragment : Fragment() {
             val info = wifiManager!!.connectionInfo
             val rssi = info.rssi
             binding.wifiData.text = rssi.toString()
+            SensorReader.start(requireContext())
+            binding.accelerometerData.text = SensorReader.Accelerometer.x.toString() + "\n" +
+                                             SensorReader.Accelerometer.y.toString() + "\n" +
+                                             SensorReader.Accelerometer.z.toString()
+
+            binding.gyroscopeData.text = SensorReader.Gyroscope.x.toString() + "\n"
+                                         SensorReader.Gyroscope.y.toString() + "\n"
+                                         SensorReader.Gyroscope.z.toString() + "\n"
+
+            binding.magnetometerData.text = SensorReader.Magnetometer.x.toString() + "\n"
+                                            SensorReader.Magnetometer.y.toString() + "\n"
+                                            SensorReader.Magnetometer.z.toString() + "\n"
         }.also { runnable = it }, delay.toLong())
         super.onResume()
     }
