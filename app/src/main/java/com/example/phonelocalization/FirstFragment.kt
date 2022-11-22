@@ -52,12 +52,12 @@ class FirstFragment : Fragment() {
                                              SensorReader.Accelerometer.y.toString() + "\n" +
                                              SensorReader.Accelerometer.z.toString()
 
-            binding.gyroscopeData.text = SensorReader.Gyroscope.x.toString() + "\n"
-                                         SensorReader.Gyroscope.y.toString() + "\n"
+            binding.gyroscopeData.text = SensorReader.Gyroscope.x.toString() + "\n" +
+                                         SensorReader.Gyroscope.y.toString() + "\n" +
                                          SensorReader.Gyroscope.z.toString() + "\n"
 
-            binding.magnetometerData.text = SensorReader.Magnetometer.x.toString() + "\n"
-                                            SensorReader.Magnetometer.y.toString() + "\n"
+            binding.magnetometerData.text = SensorReader.Magnetometer.x.toString() + "\n" +
+                                            SensorReader.Magnetometer.y.toString() + "\n" +
                                             SensorReader.Magnetometer.z.toString() + "\n"
         }.also { runnable = it }, delay.toLong())
         super.onResume()
