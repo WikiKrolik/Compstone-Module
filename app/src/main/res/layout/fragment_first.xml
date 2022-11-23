@@ -17,14 +17,14 @@
             android:id="@+id/accelerometer_text"
             android:layout_width="202dp"
             android:layout_height="36dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="32dp"
             android:fontFamily="serif"
             android:gravity="center"
             android:text="Accelerometer:"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,8 +76,8 @@
         <TextView
             android:id="@+id/wifi_data"
             android.text="@wifi"
-            android:layout_width="202dp"
-            android:layout_height="88dp"
+            android:layout_width="197dp"
+            android:layout_height="49dp"
             android:fontFamily="serif"
             android:gravity="center"
             android:textSize="20sp"
