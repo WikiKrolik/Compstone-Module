@@ -1,8 +1,6 @@
 package com.example.phonelocalization
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -41,30 +39,29 @@ class FirstFragment : Fragment() {
     }
 
     override fun onResume() {
-
-        super.onResume()
         activity?.let {
             handler.postDelayed(Runnable {
                 handler.postDelayed(runnable!!, delay.toLong())
-                val wifiManager = activity?.getSystemService(Context.WIFI_SERVICE) as WifiManager?
-                val info = wifiManager?.connectionInfo
-                val rssi = info?.rssi
-                binding.wifiData.text = rssi.toString()
+
+                WifiReader.refresh(requireContext())
+                binding.wifiData.text = WifiReader.Wifi.signalStrength
+
+                SensorReader.start(requireContext())
+                binding.accelerometerData.text = SensorReader.Accelerometer.x.toString() + "\n" +
+                        SensorReader.Accelerometer.y.toString() + "\n" +
+                        SensorReader.Accelerometer.z.toString()
+
+                binding.gyroscopeData.text = SensorReader.Gyroscope.x.toString() + "\n" +
+                        SensorReader.Gyroscope.y.toString() + "\n" +
+                        SensorReader.Gyroscope.z.toString() + "\n"
+
+                binding.magnetometerData.text = SensorReader.Magnetometer.x.toString() + "\n" +
+                        SensorReader.Magnetometer.y.toString() + "\n" +
+                        SensorReader.Magnetometer.z.toString() + "\n"
             }.also { runnable = it }, delay.toLong())
         }
-        SensorReader.start(requireContext())
-        binding.accelerometerData.text = SensorReader.Accelerometer.x.toString() + "\n" +
-                SensorReader.Accelerometer.y.toString() + "\n" +
-                SensorReader.Accelerometer.z.toString()
 
-        binding.gyroscopeData.text = SensorReader.Gyroscope.x.toString() + "\n" +
-                SensorReader.Gyroscope.y.toString() + "\n" +
-                SensorReader.Gyroscope.z.toString() + "\n"
-
-        binding.magnetometerData.text = SensorReader.Magnetometer.x.toString() + "\n"
-        SensorReader.Magnetometer.y.toString() + "\n"
-        SensorReader.Magnetometer.z.toString() + "\n"
-
+        super.onResume()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
