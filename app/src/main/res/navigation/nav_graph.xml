@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_first" />
 
     <fragment
-        android:id="@+id/Map"
+        android:id="@+id/Position"
         android:name="com.example.phonelocalization.SecondFragment"
-        android:label="Map"
+        android:label="Position"
         tools:layout="@layout/fragment_second" />
 
 </navigation>

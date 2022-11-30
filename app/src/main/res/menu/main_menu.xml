@@ -11,9 +11,9 @@
 
 
         <item
-            android:id = "@+id/Map"
-            android:icon = "@drawable/ic_baseline_map_24"
-            android:title="Map"/>
+            android:id = "@+id/Position"
+            android:icon = "@drawable/ic_baseline_location_on_24"
+            android:title="Position"/>
 
         <item
             android:id = "@+id/Results"
