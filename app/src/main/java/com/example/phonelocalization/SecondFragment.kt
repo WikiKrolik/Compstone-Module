@@ -24,9 +24,11 @@ private var _binding: FragmentSecondBinding? = null
     ): View? {
 
       _binding = FragmentSecondBinding.inflate(inflater, container, false)
+      //  binding.positionData.text = ShowArray(ParticleFilter.GeneratePositions(ParticleFilter.AvailablePositions()))
       return binding.root
 
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,4 +39,12 @@ override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+}
+
+private fun ShowArray(array:Array<Int>): String {
+    var result: String = ""
+    for (i in 1..array.size) {
+        result += array[i].toString() + "/n"
+    }
+    return result;
 }
