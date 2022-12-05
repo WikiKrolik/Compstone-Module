@@ -24,7 +24,7 @@ private var _binding: FragmentSecondBinding? = null
     ): View? {
 
       _binding = FragmentSecondBinding.inflate(inflater, container, false)
-      //  binding.positionData.text = ShowArray(ParticleFilter.GeneratePositions(ParticleFilter.AvailablePositions()))
+        binding.positionData.text = ParticleFilter.GeneratePositions(ParticleFilter.AvailablePositions())
       return binding.root
 
     }
@@ -44,7 +44,7 @@ override fun onDestroyView() {
 private fun ShowArray(array:Array<Int>): String {
     var result: String = ""
     for (i in 1..array.size) {
-        result += array[i].toString() + "/n"
+        result += array[i-1].toString() + " ,"
     }
     return result;
 }
