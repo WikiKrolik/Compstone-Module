@@ -32,7 +32,7 @@ object ParticleFilter {
 
    public fun GeneratePositions( array:Array<Array<Int>>): String {
        var arr: String = ""
-        for (i in 1..10){
+        for (i in 1..50){
             var x: Int =  (array.indices).random()
             arr += array[x][0].toString() + ": " + array[x][1] +  ";     "
 
