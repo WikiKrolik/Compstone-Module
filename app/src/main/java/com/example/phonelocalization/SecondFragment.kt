@@ -24,7 +24,7 @@ private var _binding: FragmentSecondBinding? = null
     ): View? {
 
       _binding = FragmentSecondBinding.inflate(inflater, container, false)
-        binding.positionData.text = ParticleFilter.GeneratePositions(ParticleFilter.AvailablePositions())
+        binding.positionData.text = ParticleFilter.GeneratePositions()
       return binding.root
 
     }
