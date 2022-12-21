@@ -1,12 +1,12 @@
 package com.example.phonelocalization
 
 object WifiHeatmap {
-    const val IMG_WIDTH = 531;
-    const val IMG_HEIGHT = 449;
-    const val MEASUREMENTS_WIDTH = 12;
-    const val MEASUREMENTS_HEIGHT = 11;
+    private const val IMG_WIDTH = 531;
+    private const val IMG_HEIGHT = 449;
+    private const val MEASUREMENTS_WIDTH = 12;
+    private const val MEASUREMENTS_HEIGHT = 11;
 
-    var heatmap = arrayOf(
+    private var heatmap = arrayOf(
         arrayOf(-84, -84, -84, 1, 1, 1, 1, 1, -65, -61, -64, -65),
         arrayOf(-82, -84, -84, 1, 1, 1, 1, 1, -65, -61, -64, -65),
         arrayOf(-82, -84, -76, -73, -70, -68, -65, -65, -58, -56, -54, -56),
