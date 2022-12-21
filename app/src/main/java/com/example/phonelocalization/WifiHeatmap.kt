@@ -1,7 +1,5 @@
 package com.example.phonelocalization
 
-import android.content.Context
-
 object WifiHeatmap {
     const val IMG_WIDTH = 531;
     const val IMG_HEIGHT = 449;
@@ -23,6 +21,16 @@ object WifiHeatmap {
     );
 
     fun getWifiStrength(x: Int, y: Int): Int {
+        val calculatedYIndex = y * MEASUREMENTS_HEIGHT / IMG_HEIGHT;
+        val calculatedXIndex = x * MEASUREMENTS_WIDTH / IMG_WIDTH;
+
+        if (calculatedYIndex > MEASUREMENTS_HEIGHT - 1
+            || calculatedYIndex < 0
+            || calculatedXIndex > MEASUREMENTS_WIDTH - 1
+            || calculatedXIndex < 0) {
+            return 1;
+        }
+
         return heatmap[y * MEASUREMENTS_HEIGHT / IMG_HEIGHT][x * MEASUREMENTS_WIDTH / IMG_WIDTH];
     }
 }
