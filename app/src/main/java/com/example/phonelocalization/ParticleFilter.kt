@@ -10,6 +10,8 @@ import android.hardware.SensorManager
 import android.os.Handler
 import android.os.HandlerThread
 import java.util.*
+import kotlin.math.PI
+import kotlin.math.atan2
 import kotlin.random.Random.Default.nextInt
 
 object ParticleFilter {
@@ -30,13 +32,26 @@ object ParticleFilter {
         //}
         return false
     }
+    fun convertToCompassValues(): Float {
+        // Determine the magnetometer's hard and soft iron offsets (omitted for simplicity)
+        // Apply the hard and soft iron offsets to the magnetometer readings (omitted for simplicity)
+
+        // Calculate the heading using the magnetometer readings and trigonometry
+        var heading = (atan2(SensorReader.Magnetometer.y.toDouble(), SensorReader.Magnetometer.x.toDouble()) *180/ PI + 270).toFloat()
+        if (heading < 0 ) {
+            heading += 360;
+        }
+        // Adjust the heading for the device's orientation (omitted for simplicity)
+
+        return heading
+    }
 
    public fun GeneratePositions(): String {
        var arr: String = ""
        var a: Int = 0
        var x: Int
        var y : Int
-       while (a <= 50){
+       while (a <= 1000){
            var x: Int =  (0 .. 530).random()
            var y: Int = (0.. 488).random()
            var pair = Pair(x, y)

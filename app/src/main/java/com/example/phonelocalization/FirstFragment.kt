@@ -38,6 +38,7 @@ class FirstFragment : Fragment() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onResume() {
         activity?.let {
             handler.postDelayed(Runnable {
@@ -58,6 +59,7 @@ class FirstFragment : Fragment() {
                 binding.magnetometerData.text = SensorReader.Magnetometer.x.toString() + "\n" +
                         SensorReader.Magnetometer.y.toString() + "\n" +
                         SensorReader.Magnetometer.z.toString() + "\n"
+
             }.also { runnable = it }, delay.toLong())
         }
 
