@@ -1,5 +1,7 @@
 package com.example.phonelocalization
 
+import kotlin.math.abs
+
 object WifiHeatmap {
     private const val IMG_WIDTH = 531;
     private const val IMG_HEIGHT = 449;
@@ -32,5 +34,9 @@ object WifiHeatmap {
         }
 
         return heatmap[y * MEASUREMENTS_HEIGHT / IMG_HEIGHT][x * MEASUREMENTS_WIDTH / IMG_WIDTH];
+    }
+
+    fun wifiSensorWeight(x: Int, y: Int, strength: Int): Double {
+        return 1.0 - (abs(strength - getWifiStrength(x, y)) / 44);
     }
 }
