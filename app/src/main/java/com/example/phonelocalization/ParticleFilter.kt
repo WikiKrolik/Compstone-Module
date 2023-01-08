@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Handler
 import android.os.HandlerThread
+import android.provider.Telephony.Mms.Part
 import java.util.*
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -16,7 +17,7 @@ import kotlin.random.Random.Default.nextInt
 
 object ParticleFilter {
 
-   public fun AvailablePositions( pair: Pair<Int, Int>): Boolean{
+    fun AvailablePositions( pair: Pair<Int, Int>): Boolean{
        // var arr = arrayOf<Pair<Int, Int>>() // frvlstr blank arr
        // for (x in 2..530){
             //for(y in 4..448){
@@ -46,7 +47,7 @@ object ParticleFilter {
         return heading
     }
 
-   public fun GeneratePositions(): String {
+   fun GeneratePositions(): String {
        var arr: String = ""
        var a: Int = 0
        var x: Int
@@ -61,5 +62,33 @@ object ParticleFilter {
            }
         }
        return arr;
+    }
+
+    fun Resample(particles : ArrayList<Particle>){
+        //Sort the list of particles by their weight
+        particles.sortedBy { it.weight }
+
+        var numOfParticlesToRemove : Int = 0
+
+        //TODO: Change the value of thresholdWeight to one that makes sense
+        var thresholdWeight : Int = 50
+
+        //Find particle with the biggest weight
+        var maxParticle : Particle = particles.maxBy { it.weight }
+
+        //Remove those particles, whose weight is too small.
+        for(p in particles)
+        {
+            if(p.weight < thresholdWeight){
+                numOfParticlesToRemove++
+                particles.remove(p)
+            }
+        }
+
+        //Copy the particle with the biggest weight, as many times, as many particles have been deleted in this iteration.
+        for(i in 0..numOfParticlesToRemove){
+            particles.add(Particle(maxParticle.x, maxParticle.y, maxParticle.weight))
+        }
+
     }
 }
