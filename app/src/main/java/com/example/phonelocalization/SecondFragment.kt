@@ -101,15 +101,10 @@ private var _binding: FragmentSecondBinding? = null
 
     }
 override fun onDestroyView() {
+    runnable?.let { handler.removeCallbacks(it) }
         super.onDestroyView()
         _binding = null
     }
 }
 
-private fun ShowArray(array:Array<Int>): String {
-    var result: String = ""
-    for (i in 1..array.size) {
-        result += array[i-1].toString() + " ,"
-    }
-    return result;
-}
+

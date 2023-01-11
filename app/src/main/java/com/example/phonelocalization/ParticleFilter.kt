@@ -19,7 +19,7 @@ object ParticleFilter {
 
 
     // A simple data class to represent a 2D point with x and y coordinates
-    data class Point(val x: Int, val y: Int)
+    data class Point(val x: Double, val y: Double)
 
     // A simple data class to represent a particle with a position (x, y) and weight
     data class Particle(val position: Point, var weight: Double)
@@ -28,13 +28,15 @@ object ParticleFilter {
         magX: Double, magY: Double, gyroX: Double, gyroY: Double, accelX: Double, accelY: Double,
         particles: ArrayList<Particle>, dt: Double
     ): ArrayList<Particle> {
+        var predictedParticles = particles
         // Predict the new positions of the particles using the gyroscope readings
-        val predictedParticles = particles.map { particle ->
-            val newX = (particle.position.x + gyroX * dt).toInt()
-            val newY = (particle.position.y + gyroY * dt).toInt()
-            Particle(Point(newX, newY), particle.weight)
+        if (abs(accelX) > 0.7 || abs(accelY) > 0.7) {
+             predictedParticles = particles.map { particle ->
+                 val newX = (particle.position.x + accelX * dt/1000 * dt/1000 / 2)
+                 val newY = (particle.position.y + accelY * dt/1000 * dt/1000 / 2)
+                 Particle(Point(newX, newY), particle.weight)
+             } as ArrayList<Particle>
         }
-
         // Update the weights of the particles using the magnetometer and accelerometer readings
         val updatedParticles = predictedParticles.map { particle ->
             val errorX = particle.position.x - magX
@@ -54,12 +56,12 @@ object ParticleFilter {
        // var arr = arrayOf<Pair<Int, Int>>() // frvlstr blank arr
        // for (x in 2..530){
             //for(y in 4..448){
-                if(( pair.x in 2..96 && pair.y in 4 .. 173) ||
-                    (pair.x in 94 .. 398 && pair.y in 124 .. 173) ||
-                    (pair.x in 398 .. 530 && pair.y in 4 .. 42) ||
-                    (pair.x in 453 .. 530 && pair.y in 42 .. 173) ||
-                    (pair.x in 66 .. 450 && pair.y in 390 .. 448) ||
-                    (pair.x in 2 .. 60)) {
+                if(( pair.x in 2.0..96.0 && pair.y in 4.0 .. 173.0) ||
+                    (pair.x in 94.0 .. 398.0 && pair.y in 124.0 .. 173.0) ||
+                    (pair.x in 398.0 .. 530.0 && pair.y in 4.0 .. 42.0) ||
+                    (pair.x in 453.0 .. 530.0 && pair.y in 42.0 .. 173.0) ||
+                    (pair.x in 66.0 .. 450.0 && pair.y in 390.0 .. 448.0) ||
+                    (pair.x in 2.0 .. 60.0)) {
                     return true
                 }
             //}
@@ -85,8 +87,8 @@ object ParticleFilter {
 
        var a: Int = 0
        while (a <= 2){
-           var x: Int =  (0 .. 530).random()
-           var y: Int = (0.. 488).random()
+           var x: Double =  ((0 .. 530).random()).toDouble()
+           var y: Double = ((0.. 488).random()).toDouble()
            var pair = Particle(Point(x, y), 1.0)
            if (AvailablePositions(Point(x, y))){
                list.add(pair)
