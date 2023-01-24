@@ -26,7 +26,7 @@ class SecondFragment : Fragment() {
 private var _binding: FragmentSecondBinding? = null
     var handler: Handler = Handler()
     var runnable: Runnable? = null
-    var delay = 500
+    var delay = 10
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!

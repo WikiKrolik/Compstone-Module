@@ -60,8 +60,8 @@ object SensorReader : SensorEventListener {
             this.handlerThread = HandlerThread(Accelerometer::class.java.simpleName)
             this.handlerThread.start()
             handler = this.handlerThread.looper.let { Handler(it) }
-            this.sensorManager.registerListener(this, this.accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL, handler)
-            this.sensorManager.registerListener(this, this.gyroscopeSensor,SensorManager.SENSOR_DELAY_NORMAL, handler)
+            this.sensorManager.registerListener(this, this.accelerometerSensor, SensorManager.SENSOR_DELAY_FASTEST, handler)
+            this.sensorManager.registerListener(this, this.gyroscopeSensor,SensorManager.SENSOR_DELAY_FASTEST, handler)
             this.sensorManager.registerListener(this, this.magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL, handler)
         }
     }

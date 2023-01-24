@@ -10,33 +10,57 @@ import android.hardware.SensorManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.provider.Telephony.Mms.Part
+import java.math.RoundingMode
 import java.util.*
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.*
+import kotlin.math.round
 
 object ParticleFilter {
 
 
     // A simple data class to represent a 2D point with x and y coordinates
-    data class Point(val x: Double, val y: Double)
+    data class Point(var x: Double, var y: Double)
 
     // A simple data class to represent a particle with a position (x, y) and weight
     data class Particle(val position: Point, var weight: Double)
 
+    data class PositionVelocityData(var currentPos : Point, var previousPos : Point, var currentVel : Point, var previousVel : Point)
+    var IntegrationData = PositionVelocityData(ParticleFilter.Point(0.0,0.0), ParticleFilter.Point(0.0,0.0),ParticleFilter.Point(0.0,0.0),ParticleFilter.Point(0.0,0.0))
+
     fun calculateMovement(
         magX: Double, magY: Double, gyroX: Double, gyroY: Double, accelX: Double, accelY: Double,
-        particles: ArrayList<Particle>, dt: Double
+        particles: ArrayList<Particle>, deltaTime: Double
     ): ArrayList<Particle> {
         var predictedParticles = particles
-        // Predict the new positions of the particles using the gyroscope readings
-        if (abs(accelX) > 0.7 || abs(accelY) > 0.7) {
-             predictedParticles = particles.map { particle ->
-                 val newX = (particle.position.x + accelX * dt/1000 * dt/1000 / 2)
-                 val newY = (particle.position.y + accelY * dt/1000 * dt/1000 / 2)
-                 Particle(Point(newX, newY), particle.weight)
-             } as ArrayList<Particle>
-        }
+
+
+        val dt = 0.001 * deltaTime
+
+        println(accelX.toString() + " " + accelY.toString())
+        if (IntegrationData.previousVel.x < 0.1) {IntegrationData.previousVel.x = 0.0}
+        if (IntegrationData.previousVel.y < 0.1) {IntegrationData.previousVel.y = 0.0}
+
+            IntegrationData.currentVel.x = IntegrationData.previousVel.x + accelX * dt
+            IntegrationData.currentVel.y = IntegrationData.previousVel.y + accelY * dt
+
+            IntegrationData.currentPos.x =
+                IntegrationData.previousPos.x + IntegrationData.currentVel.x * dt
+            IntegrationData.currentPos.y =
+                IntegrationData.previousPos.y + IntegrationData.currentVel.y * dt
+
+            IntegrationData.previousPos = IntegrationData.currentPos
+            IntegrationData.previousVel = IntegrationData.currentVel
+
+
+        // Predict the new positions of the particles using the gyroscope reading
+        predictedParticles = particles.map { particle ->
+            val newX = (IntegrationData.currentPos.x)
+            val newY = (IntegrationData.currentPos.y)
+            Particle(Point(newX, newY), particle.weight)
+        } as ArrayList<Particle>
+
         // Update the weights of the particles using the magnetometer and accelerometer readings
         val updatedParticles = predictedParticles.map { particle ->
             val errorX = particle.position.x - magX
@@ -86,7 +110,7 @@ object ParticleFilter {
        val list = arrayListOf<Particle>()
 
        var a: Int = 0
-       while (a <= 2){
+       while (a <= 0){
            var x: Double =  ((0 .. 530).random()).toDouble()
            var y: Double = ((0.. 488).random()).toDouble()
            var pair = Particle(Point(x, y), 1.0)
