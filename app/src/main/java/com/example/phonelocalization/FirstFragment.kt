@@ -56,9 +56,10 @@ class FirstFragment : Fragment() {
                         SensorReader.Accelerometer.y.toString() + "\n" +
                         SensorReader.Accelerometer.z.toString()
 
-                binding.gyroscopeData.text = SensorReader.Gyroscope.x.toString() + "\n" +
-                        SensorReader.Gyroscope.y.toString() + "\n" +
-                        SensorReader.Gyroscope.z.toString() + "\n"
+                binding.gyroscopeData.text = speedCalculator?.getET().toString()
+//                    SensorReader.Gyroscope.x.toString() + "\n" +
+//                        SensorReader.Gyroscope.y.toString() + "\n" +
+//                        SensorReader.Gyroscope.z.toString() + "\n"
 
                 binding.magnetometerData.text = SensorReader.Magnetometer.x.toString() + "\n" +
                         SensorReader.Magnetometer.y.toString() + "\n" +

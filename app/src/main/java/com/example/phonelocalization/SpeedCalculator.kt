@@ -8,6 +8,7 @@ import android.hardware.SensorManager
 import androidx.core.content.getSystemService
 import java.lang.String
 import kotlin.Float
+import kotlin.math.abs
 
 
 class SpeedCalculator(private val context: Context) {
@@ -29,22 +30,31 @@ class SpeedCalculator(private val context: Context) {
 
     private val NS2S = 1.0f / 1000000000.0f
 
+    private var errorTerminator = 10
+    private var lastSpeed : Float = 0f
+
     private val listener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
             if (event.sensor == mAccelerometer) {
-                if (timestamp != 0L) {
+                if(errorTerminator == 0){
+                    speed = 0f
+                    errorTerminator = 10
+                }
+                if (timestamp != 0L && (abs(event.values[0]) > 0.5 || abs(event.values[1]) > 0.5)) {
                     val dT: Float = (event.timestamp - timestamp) * NS2S
                     lax = event.values[0]
                     lay = event.values[1]
-                    laz = event.values[2]
+                    //laz = event.values[2]
                     vx = vx + lax * dT
                     vy = vy + lay * dT
-                    vz = vz + laz * dT
-                    speed = Math.sqrt(vx * vx + vy * vy + vz * vz).toFloat()
+                    //vz = vz + laz * dT
+                    speed = Math.sqrt(vx * vx + vy * vy).toFloat()
                     if (speed < 0.01) {
                         speed = 0f
                     }
                 }
+                else
+                    errorTerminator--
                 timestamp = event.timestamp
             }
         }
@@ -61,5 +71,9 @@ class SpeedCalculator(private val context: Context) {
 
     fun getSpeed(): Float {
         return speed
+    }
+
+    fun getET() : Int{
+        return errorTerminator
     }
 }
