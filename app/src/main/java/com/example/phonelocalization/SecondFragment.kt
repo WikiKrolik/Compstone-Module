@@ -95,7 +95,7 @@ private var _binding: FragmentSecondBinding? = null
                                                 SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
                                                 arr, delay.toDouble())
 
-            binding.positionData.text = arr.toString()
+            //binding.positionData.text = arr.toString()
         }.also { runnable = it }, delay.toLong())
 
 

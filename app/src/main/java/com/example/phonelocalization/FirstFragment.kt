@@ -25,6 +25,8 @@ class FirstFragment : Fragment() {
     var handler: Handler = Handler()
     var runnable: Runnable? = null
     var delay = 500
+    private var speedCalculator : SpeedCalculator? = null
+
 
     @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -34,6 +36,7 @@ class FirstFragment : Fragment() {
     ): View? {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        speedCalculator = SpeedCalculator(requireContext())
         return binding.root
 
     }
@@ -44,8 +47,9 @@ class FirstFragment : Fragment() {
             handler.postDelayed(Runnable {
                 handler.postDelayed(runnable!!, delay.toLong())
 
-                WifiReader.refresh(requireContext())
-                binding.wifiData.text = WifiReader.Wifi.signalStrength
+//                WifiReader.refresh(requireContext())
+//                binding.wifiData.text = WifiReader.Wifi.signalStrength
+                binding.wifiData.text = speedCalculator?.getSpeed().toString()
 
                 SensorReader.start(requireContext())
                 binding.accelerometerData.text = SensorReader.Accelerometer.x.toString() + "\n" +

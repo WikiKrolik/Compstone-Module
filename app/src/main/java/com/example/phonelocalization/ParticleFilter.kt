@@ -1,21 +1,15 @@
 package com.example.phonelocalization
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Point
-import android.hardware.Sensor
 import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
-import android.os.Handler
-import android.os.HandlerThread
-import android.provider.Telephony.Mms.Part
-import java.math.RoundingMode
+import java.lang.String
 import java.util.*
-import kotlin.math.PI
-import kotlin.math.atan2
+import kotlin.Boolean
+import kotlin.Double
+import kotlin.Float
+import kotlin.Int
 import kotlin.math.*
-import kotlin.math.round
+
 
 object ParticleFilter {
 
