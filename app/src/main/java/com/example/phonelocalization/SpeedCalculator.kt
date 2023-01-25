@@ -51,6 +51,8 @@ class SpeedCalculator(private val context: Context) {
                     speed = Math.sqrt(vx * vx + vy * vy).toFloat()
                     if (speed < 0.01) {
                         speed = 0f
+                        vx = 0.0
+                        vy = 0.0
                     }
                 }
                 else

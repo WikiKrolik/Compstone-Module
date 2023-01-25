@@ -33,7 +33,9 @@ class SecondFragment : Fragment() {
     private var _binding: FragmentSecondBinding? = null
     var handler: Handler = Handler()
     var runnable: Runnable? = null
-    var delay = 10
+    var delay = 500
+    var firstAngle = 0.0;
+    private var speedCalculator : SpeedCalculator? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -47,7 +49,11 @@ class SecondFragment : Fragment() {
         // binding.positionData.text = ParticleFilter.GeneratePositions()
         arr = ParticleFilter.GeneratePositions() as ArrayList<ParticleFilter.Particle>
         binding.positionData.text = ParticleFilter.GeneratePositions().toString()
-
+        firstAngle = (calculateRotationAngle(
+            SensorReader.Gyroscope.z.toDouble(),
+            SensorReader.Gyroscope.timestamp
+        ) * 180 * 0.31830988618) % 360
+        speedCalculator = SpeedCalculator(requireContext())
         return binding.root
     }
 
@@ -98,21 +104,21 @@ class SecondFragment : Fragment() {
         return rotationAngle
     }
 
-    fun shiftParticles(particles : ArrayList<Particle>, speed : Double, angle : Double, dt : Float){
+    fun shiftParticles(particles : ArrayList<ParticleFilter.Particle>, speed : Double, angle : Double, dt : Float): ArrayList<ParticleFilter.Particle> {
         //Calculate the distance in pixels, that the particles have to move.
         var distance : Int = (speed * dt * NS2S * pixelToMetersRatio).roundToInt()
 
-        var x: Int
-        var y: Int
+        var x: Double
+        var y: Double
 
         //Now we iterate through all the particles, and move them the respective distance.
         for(p in particles){
             //Calculate the x coordinate
             x = (distance /
-                    sqrt(1 + tan(angle).pow(2.0))).roundToInt()
+                    sqrt(1 + tan(angle).pow(2.0)))
 
             //Calculate the y coordinate
-            y = (x * tan(angle)).roundToInt()
+            y = (x * tan(angle))
 
             //Change signs if needed.
             if(angle in 180f..270f || angle in 270f..360f)
@@ -121,9 +127,11 @@ class SecondFragment : Fragment() {
                 x = - x
 
             //Shift the particles by the distance, expressed as pixels.
-            p.x += x
-            p.y += y
+            p.position.x += x
+            p.position.y += y
         }
+
+        return particles;
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -131,21 +139,27 @@ class SecondFragment : Fragment() {
 
         handler.postDelayed(Runnable {
             handler.postDelayed(runnable!!, delay.toLong())
-            arr = ParticleFilter.calculateMovement(
-                SensorReader.Magnetometer.x.toDouble(), SensorReader.Magnetometer.y.toDouble(),
-                SensorReader.Gyroscope.x.toDouble(), SensorReader.Gyroscope.y.toDouble(),
-                SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
-                arr, delay.toDouble()
-            )
-
-            binding.positionData.text = ((calculateRotationAngle(
+//            arr = ParticleFilter.calculateMovement(
+//                SensorReader.Magnetometer.x.toDouble(), SensorReader.Magnetometer.y.toDouble(),
+//                SensorReader.Gyroscope.x.toDouble(), SensorReader.Gyroscope.y.toDouble(),
+//                SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
+//                arr, delay.toDouble()
+//            )
+            var diff = ((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
-            ) * 180 * 0.31830988618) % 360).toString()
+            ) * 180 * 0.31830988618) % 360) - firstAngle
+            //arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
 
+            var angle = ((calculateRotationAngle(
+                SensorReader.Gyroscope.z.toDouble(),
+                SensorReader.Gyroscope.timestamp
+            ) * 180 * 0.31830988618) % 360)
+            binding.positionData.text = arr.toString() + "\n" + "speed: " + speedCalculator?.getSpeed()!!.toString() + "\n" + "angle: " + angle.toString() ;
+            //
         }.also { runnable = it }, delay.toLong())
-
         drawMinimap(arr[0].position.x.toInt(), arr[0].position.x.toInt());
+
     }
 
     override fun onDestroyView() {
