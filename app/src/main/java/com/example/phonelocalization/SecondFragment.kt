@@ -15,10 +15,7 @@ import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.example.phonelocalization.databinding.FragmentSecondBinding
-import kotlin.math.pow
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
-import kotlin.math.tan
+import kotlin.math.*
 
 
 /**
@@ -33,7 +30,7 @@ class SecondFragment : Fragment() {
     private var _binding: FragmentSecondBinding? = null
     var handler: Handler = Handler()
     var runnable: Runnable? = null
-    var delay = 500
+    var delay = 10
     var firstAngle = 0.0;
     private var speedCalculator : SpeedCalculator? = null
 
@@ -145,20 +142,20 @@ class SecondFragment : Fragment() {
 //                SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
 //                arr, delay.toDouble()
 //            )
-            var diff = ((calculateRotationAngle(
+            var diff = abs(((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
-            ) * 180 * 0.31830988618) % 360) - firstAngle
-            //arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
+            ) * 180 * 0.31830988618) % 360) - firstAngle)
+            arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
 
             var angle = ((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
             ) * 180 * 0.31830988618) % 360)
-            binding.positionData.text = arr.toString() + "\n" + "speed: " + speedCalculator?.getSpeed()!!.toString() + "\n" + "angle: " + angle.toString() ;
+            binding.positionData.text = arr.toString() + "\n" + "speed: " + speedCalculator?.getSpeed()!!.toString() + "\n" + "angle: " + diff.toString() ;
             //
         }.also { runnable = it }, delay.toLong())
-        drawMinimap(arr[0].position.x.toInt(), arr[0].position.x.toInt());
+        drawMinimap(arr[0].position.x.toInt(), arr[0].position.y.toInt());
 
     }
 
