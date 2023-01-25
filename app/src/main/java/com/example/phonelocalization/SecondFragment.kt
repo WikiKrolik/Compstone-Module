@@ -11,6 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.phonelocalization.databinding.FragmentSecondBinding
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
+import kotlin.math.tan
 
 
 /**
@@ -83,12 +87,35 @@ private var _binding: FragmentSecondBinding? = null
     var NS2S = 1.0f / 1000000000.0f
     var previousTimestamp: Long = 0
     var rotationAngle: Double = 0.0
+    val pixelToMetersRatio = 24.411
 
     fun calculateRotationAngle(z : Double, timestamp : Long): Double {
         val dt = (timestamp - previousTimestamp) * NS2S
         previousTimestamp = timestamp
         rotationAngle += z * dt
         return rotationAngle
+    }
+
+    fun shiftParticles(particles : ArrayList<Particle>, speed : Double, angle : Double, dt : Float){
+        //Calculate the distance in pixels, that the particles have to move.
+        var distance : Int = (speed * dt * NS2S * pixelToMetersRatio).roundToInt()
+
+        var x: Int
+        var y: Int
+
+        //Now we iterate through all the particles, and move them the respective distance.
+        for(p in particles){
+            //Calculate the x coordinate
+            x = (distance /
+                    sqrt(1 + tan(angle).pow(2.0))).roundToInt()
+
+            //Calculate the y coordinate
+            y = (x * tan(angle)).roundToInt()
+
+            //Shift the particles by the distance, expressed as pixels.
+            p.x += x
+            p.y += y
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
