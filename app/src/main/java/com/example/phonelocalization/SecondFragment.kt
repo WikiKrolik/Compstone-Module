@@ -113,7 +113,7 @@ private var _binding: FragmentSecondBinding? = null
             y = (x * tan(angle)).roundToInt()
 
             //Change signs if needed.
-            if(angle > 180 && angle < 270 || angle > 270 && angle < 360)
+            if(angle in 180f..270f || angle in 270f..360f)
                 y = - y
             if(angle in 0f..180f)
                 x = - x
