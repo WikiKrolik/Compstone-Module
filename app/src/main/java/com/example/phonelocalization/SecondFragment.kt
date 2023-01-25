@@ -103,6 +103,7 @@ private var _binding: FragmentSecondBinding? = null
                                                 arr, delay.toDouble())
 
             binding.positionData.text = ((calculateRotationAngle(SensorReader.Gyroscope.z.toDouble(), SensorReader.Gyroscope.timestamp) * 180 * 0.31830988618) % 360).toString()
+
         }.also { runnable = it }, delay.toLong())
 
 
