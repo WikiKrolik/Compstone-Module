@@ -31,7 +31,6 @@ class SecondFragment : Fragment() {
     var runnable: Runnable? = null
     var delay = 10
 
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -47,7 +46,6 @@ class SecondFragment : Fragment() {
 
         return binding.root
     }
-
 
     // Sensor event listener
     val sensorEventListener = object : SensorEventListener {
@@ -83,7 +81,6 @@ class SecondFragment : Fragment() {
 
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
     }
-
 
     var NS2S = 1.0f / 1000000000.0f
     var previousTimestamp: Long = 0
