@@ -1,5 +1,7 @@
 package com.example.phonelocalization
 
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -9,6 +11,8 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.example.phonelocalization.databinding.FragmentSecondBinding
 
@@ -22,10 +26,12 @@ class SecondFragment : Fragment() {
     private var DegreeStart = 0f
     var arr = arrayListOf<ParticleFilter.Particle>()
     var list = arrayListOf<ParticleFilter.Particle>()
-private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentSecondBinding? = null
     var handler: Handler = Handler()
     var runnable: Runnable? = null
     var delay = 10
+
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -34,13 +40,12 @@ private var _binding: FragmentSecondBinding? = null
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-      _binding = FragmentSecondBinding.inflate(inflater, container, false)
-       // binding.positionData.text = ParticleFilter.GeneratePositions()
-         arr = ParticleFilter.GeneratePositions() as ArrayList<ParticleFilter.Particle>
+        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        // binding.positionData.text = ParticleFilter.GeneratePositions()
+        arr = ParticleFilter.GeneratePositions() as ArrayList<ParticleFilter.Particle>
         binding.positionData.text = ParticleFilter.GeneratePositions().toString()
 
-      return binding.root
-
+        return binding.root
     }
 
 
@@ -84,7 +89,7 @@ private var _binding: FragmentSecondBinding? = null
     var previousTimestamp: Long = 0
     var rotationAngle: Double = 0.0
 
-    fun calculateRotationAngle(z : Double, timestamp : Long): Double {
+    fun calculateRotationAngle(z: Double, timestamp: Long): Double {
         val dt = (timestamp - previousTimestamp) * NS2S
         previousTimestamp = timestamp
         rotationAngle += z * dt
