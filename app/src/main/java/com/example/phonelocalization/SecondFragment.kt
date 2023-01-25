@@ -9,7 +9,6 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.example.phonelocalization.databinding.FragmentSecondBinding
 
@@ -81,8 +80,16 @@ private var _binding: FragmentSecondBinding? = null
     }
 
 
+    var NS2S = 1.0f / 1000000000.0f
+    var previousTimestamp: Long = 0
+    var rotationAngle: Double = 0.0
 
-
+    fun calculateRotationAngle(z : Double, timestamp : Long): Double {
+        val dt = (timestamp - previousTimestamp) * NS2S
+        previousTimestamp = timestamp
+        rotationAngle += z * dt
+        return rotationAngle
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -95,7 +102,7 @@ private var _binding: FragmentSecondBinding? = null
                                                 SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
                                                 arr, delay.toDouble())
 
-            binding.positionData.text = arr.toString()
+            binding.positionData.text = ((calculateRotationAngle(SensorReader.Gyroscope.z.toDouble(), SensorReader.Gyroscope.timestamp) * 180 * 0.31830988618) % 360).toString()
         }.also { runnable = it }, delay.toLong())
 
 

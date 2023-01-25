@@ -7,6 +7,8 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Handler
 import android.os.HandlerThread
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 object SensorReader : SensorEventListener {
 
@@ -27,6 +29,7 @@ object SensorReader : SensorEventListener {
         var x : Float = 0.0f
         var y : Float = 0.0f
         var z : Float = 0.0f
+        var timestamp : Long = 0
     }
     object Magnetometer {
         var x : Float = 0.0f
@@ -78,6 +81,7 @@ object SensorReader : SensorEventListener {
                     Gyroscope.x = event.values[0]
                     Gyroscope.y = event.values[1]
                     Gyroscope.z = event.values[2]
+                    Gyroscope.timestamp = event.timestamp
                 }
                 Sensor.TYPE_MAGNETIC_FIELD -> {
                     Magnetometer.x = event.values[0]

@@ -92,6 +92,10 @@ object ParticleFilter {
         //}
         return false
     }
+
+
+
+
     fun convertToCompassValues(): Float {
 
         // Calculate the heading using the magnetometer readings and trigonometry
