@@ -1,5 +1,7 @@
 package com.example.phonelocalization
 
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -9,6 +11,8 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.example.phonelocalization.databinding.FragmentSecondBinding
 import kotlin.math.pow
@@ -26,10 +30,11 @@ class SecondFragment : Fragment() {
     private var DegreeStart = 0f
     var arr = arrayListOf<ParticleFilter.Particle>()
     var list = arrayListOf<ParticleFilter.Particle>()
-private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentSecondBinding? = null
     var handler: Handler = Handler()
     var runnable: Runnable? = null
     var delay = 10
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -38,15 +43,13 @@ private var _binding: FragmentSecondBinding? = null
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-      _binding = FragmentSecondBinding.inflate(inflater, container, false)
-       // binding.positionData.text = ParticleFilter.GeneratePositions()
-         arr = ParticleFilter.GeneratePositions() as ArrayList<ParticleFilter.Particle>
+        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        // binding.positionData.text = ParticleFilter.GeneratePositions()
+        arr = ParticleFilter.GeneratePositions() as ArrayList<ParticleFilter.Particle>
         binding.positionData.text = ParticleFilter.GeneratePositions().toString()
 
-      return binding.root
-
+        return binding.root
     }
-
 
     // Sensor event listener
     val sensorEventListener = object : SensorEventListener {
@@ -83,13 +86,12 @@ private var _binding: FragmentSecondBinding? = null
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
     }
 
-
     var NS2S = 1.0f / 1000000000.0f
     var previousTimestamp: Long = 0
     var rotationAngle: Double = 0.0
     val pixelToMetersRatio = 24.411
 
-    fun calculateRotationAngle(z : Double, timestamp : Long): Double {
+    fun calculateRotationAngle(z: Double, timestamp: Long): Double {
         val dt = (timestamp - previousTimestamp) * NS2S
         previousTimestamp = timestamp
         rotationAngle += z * dt
@@ -128,23 +130,59 @@ private var _binding: FragmentSecondBinding? = null
         super.onViewCreated(view, savedInstanceState)
 
         handler.postDelayed(Runnable {
-
             handler.postDelayed(runnable!!, delay.toLong())
-             arr = ParticleFilter.calculateMovement(SensorReader.Magnetometer.x.toDouble(), SensorReader.Magnetometer.y.toDouble(),
-                                                SensorReader.Gyroscope.x.toDouble(),SensorReader.Gyroscope.y.toDouble(),
-                                                SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
-                                                arr, delay.toDouble())
+            arr = ParticleFilter.calculateMovement(
+                SensorReader.Magnetometer.x.toDouble(), SensorReader.Magnetometer.y.toDouble(),
+                SensorReader.Gyroscope.x.toDouble(), SensorReader.Gyroscope.y.toDouble(),
+                SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
+                arr, delay.toDouble()
+            )
 
-            binding.positionData.text = ((calculateRotationAngle(SensorReader.Gyroscope.z.toDouble(), SensorReader.Gyroscope.timestamp) * 180 * 0.31830988618) % 360).toString()
+            binding.positionData.text = ((calculateRotationAngle(
+                SensorReader.Gyroscope.z.toDouble(),
+                SensorReader.Gyroscope.timestamp
+            ) * 180 * 0.31830988618) % 360).toString()
 
         }.also { runnable = it }, delay.toLong())
 
-
+        drawMinimap(arr[0].position.x.toInt(), arr[0].position.x.toInt());
     }
-override fun onDestroyView() {
-    runnable?.let { handler.removeCallbacks(it) }
+
+    override fun onDestroyView() {
+        runnable?.let { handler.removeCallbacks(it) }
         super.onDestroyView()
         _binding = null
+    }
+
+    fun drawMinimap(x: Int, y: Int) {
+        val mapImageView: ImageView = binding.ivFloorMap
+        val mapBitmap: Bitmap = (mapImageView.drawable).toBitmap()
+
+        val bitmap = Bitmap.createBitmap(mapBitmap.width, mapBitmap.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        canvas.drawBitmap(
+            mapBitmap,
+            Rect(0, 0, mapBitmap.width, mapBitmap.height),
+            Rect(0, 0, mapBitmap.width, mapBitmap.height),
+            null
+        )
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = Color.RED
+        canvas.drawCircle(
+            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
+            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
+            30.0f,
+            paint
+        )
+        paint.color = Color.MAGENTA
+        canvas.drawCircle(
+            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
+            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
+            20.0f,
+            paint
+        )
+
+        mapImageView.setImageDrawable(BitmapDrawable(resources, bitmap))
     }
 }
 
