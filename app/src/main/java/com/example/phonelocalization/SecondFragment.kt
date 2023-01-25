@@ -112,6 +112,12 @@ private var _binding: FragmentSecondBinding? = null
             //Calculate the y coordinate
             y = (x * tan(angle)).roundToInt()
 
+            //Change signs if needed.
+            if(angle > 180 && angle < 270 || angle > 270 && angle < 360)
+                y = - y
+            if(angle in 0f..180f)
+                x = - x
+
             //Shift the particles by the distance, expressed as pixels.
             p.x += x
             p.y += y
