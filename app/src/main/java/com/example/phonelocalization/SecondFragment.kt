@@ -97,23 +97,59 @@ class SecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         handler.postDelayed(Runnable {
-
             handler.postDelayed(runnable!!, delay.toLong())
-             arr = ParticleFilter.calculateMovement(SensorReader.Magnetometer.x.toDouble(), SensorReader.Magnetometer.y.toDouble(),
-                                                SensorReader.Gyroscope.x.toDouble(),SensorReader.Gyroscope.y.toDouble(),
-                                                SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
-                                                arr, delay.toDouble())
+            arr = ParticleFilter.calculateMovement(
+                SensorReader.Magnetometer.x.toDouble(), SensorReader.Magnetometer.y.toDouble(),
+                SensorReader.Gyroscope.x.toDouble(), SensorReader.Gyroscope.y.toDouble(),
+                SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
+                arr, delay.toDouble()
+            )
 
-            binding.positionData.text = ((calculateRotationAngle(SensorReader.Gyroscope.z.toDouble(), SensorReader.Gyroscope.timestamp) * 180 * 0.31830988618) % 360).toString()
+            binding.positionData.text = ((calculateRotationAngle(
+                SensorReader.Gyroscope.z.toDouble(),
+                SensorReader.Gyroscope.timestamp
+            ) * 180 * 0.31830988618) % 360).toString()
 
         }.also { runnable = it }, delay.toLong())
 
-
+        drawMinimap(arr[0].position.x.toInt(), arr[0].position.x.toInt());
     }
-override fun onDestroyView() {
-    runnable?.let { handler.removeCallbacks(it) }
+
+    override fun onDestroyView() {
+        runnable?.let { handler.removeCallbacks(it) }
         super.onDestroyView()
         _binding = null
+    }
+
+    fun drawMinimap(x: Int, y: Int) {
+        val mapImageView: ImageView = binding.ivFloorMap
+        val mapBitmap: Bitmap = (mapImageView.drawable).toBitmap()
+
+        val bitmap = Bitmap.createBitmap(mapBitmap.width, mapBitmap.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        canvas.drawBitmap(
+            mapBitmap,
+            Rect(0, 0, mapBitmap.width, mapBitmap.height),
+            Rect(0, 0, mapBitmap.width, mapBitmap.height),
+            null
+        )
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = Color.RED
+        canvas.drawCircle(
+            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
+            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
+            30.0f,
+            paint
+        )
+        paint.color = Color.MAGENTA
+        canvas.drawCircle(
+            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
+            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
+            20.0f,
+            paint
+        )
+
+        mapImageView.setImageDrawable(BitmapDrawable(resources, bitmap))
     }
 }
 
