@@ -44,7 +44,7 @@ class SecondFragment : Fragment() {
     ): View? {
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         // binding.positionData.text = ParticleFilter.GeneratePositions()
-        val particle = ParticleFilter.Particle(ParticleFilter.Point(95.0, 150.0), 1.0);
+        val particle = ParticleFilter.Particle(ParticleFilter.Point(95.0, 150.0), 1.0, 0.0,0.0);
         arr.add(particle)
         binding.positionData.text = ParticleFilter.GeneratePositions().toString()
         firstAngle = (calculateRotationAngle(
