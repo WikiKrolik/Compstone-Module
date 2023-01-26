@@ -2,6 +2,7 @@ package com.example.phonelocalization
 
 import android.graphics.Point
 import android.hardware.SensorEvent
+import kotlinx.coroutines.processNextEventInCurrentThread
 import java.lang.String
 import java.util.*
 import kotlin.Boolean
@@ -18,7 +19,7 @@ object ParticleFilter {
     data class Point(var x: Double, var y: Double)
 
     // A simple data class to represent a particle with a position (x, y) and weight
-    data class Particle(val position: Point, var weight: Double)
+    data class Particle(val position: Point, var weight: Double, var dx: Double, var dy: Double)
 
     data class PositionVelocityData(var currentPos : Point, var previousPos : Point, var currentVel : Point, var previousVel : Point)
     var IntegrationData = PositionVelocityData(ParticleFilter.Point(0.0,0.0), ParticleFilter.Point(0.0,0.0),ParticleFilter.Point(0.0,0.0),ParticleFilter.Point(0.0,0.0))
@@ -47,25 +48,48 @@ object ParticleFilter {
             IntegrationData.previousPos = IntegrationData.currentPos
             IntegrationData.previousVel = IntegrationData.currentVel
 
-
+        val newX = (IntegrationData.currentPos.x)
+        val newY = (IntegrationData.currentPos.y)
         // Predict the new positions of the particles using the gyroscope reading
-        predictedParticles = particles.map { particle ->
-            val newX = (IntegrationData.currentPos.x)
-            val newY = (IntegrationData.currentPos.y)
-            Particle(Point(newX, newY), particle.weight)
-        } as ArrayList<Particle>
+
+//        predictedParticles = particles.map { particle ->
+//            Particle(Point(newX, newY), particle.weight)
+//        } as ArrayList<Particle>
+
+        for (particle in predictedParticles) {
+            val dx = newX - particle.position.x
+            val dy = newY - particle.position.y
+            val dr = 0;
+
+//            val positionComponent1 = sqrt(Math.pow(newX, 2.0) + Math.pow(newY, 2.0))
+//            val positionComponent2 = Math.atan2(dy, dx) - atan2(particle.position.dy, particle.position.dx)
+//            val positionComponent3 = Math.atan2(-dy, -dx) - atan2(particle.position.dy, particle.position.dx)
+
+            val const1 = 1
+            val const2 = 1
+            val const3 = 1
+
+            val power1 = -Math.pow(dx - particle.dx, 2.0) / 2 * const1 * const1
+            val power2 = -Math.pow(dy - particle.dy, 2.0) / 2 * const1 * const1
+
+            val probability = 1 / (sqrt(2 * Math.PI) * const1) * Math.pow(Math.E, power1) * 1 / sqrt(2 * Math.PI * const1) * Math.pow(Math.E, power2)
+            // Update weight and change in position
+            particle.weight = probability
+            particle.dx = newX - particle.position.x
+            particle.dy = newY - particle.position.x
+        }
 
         // Update the weights of the particles using the magnetometer and accelerometer readings
         val updatedParticles = predictedParticles.map { particle ->
             val errorX = particle.position.x - magX
             val errorY = particle.position.y - magY
             val newWeight = exp(-errorX * errorX / 2.0 - errorY * errorY / 2.0)
-            Particle(particle.position, newWeight)
+            Particle(particle.position, newWeight, particle.dx, particle.dy)
         }
 
         // Normalize the weights of the particles
         val totalWeight = updatedParticles.map { it.weight }.sum()
-        val normalizedParticles = updatedParticles.map { Particle(it.position, it.weight / totalWeight) }
+        val normalizedParticles = updatedParticles.map { Particle(it.position, it.weight / totalWeight, it.dx,it.dy) }
 
         return normalizedParticles as ArrayList<Particle>
     }
@@ -111,7 +135,7 @@ object ParticleFilter {
        while (a <= 0){
            var x: Double =  ((0 .. 530).random()).toDouble()
            var y: Double = ((0.. 488).random()).toDouble()
-           var pair = Particle(Point(x, y), 1.0)
+           var pair = Particle(Point(x, y), 1.0, 0.0, 0.0)
            if (AvailablePositions(Point(x, y))){
                list.add(pair)
                a++
