@@ -20,6 +20,52 @@ object ParticleFilter {
     data class PositionVelocityData(var currentPos : Point, var previousPos : Point, var currentVel : Point, var previousVel : Point)
     var IntegrationData = PositionVelocityData(ParticleFilter.Point(0.0,0.0), ParticleFilter.Point(0.0,0.0),ParticleFilter.Point(0.0,0.0),ParticleFilter.Point(0.0,0.0))
 
+    fun particleFilter(predictedParticles :ArrayList<Particle>, previousParticles : ArrayList<Particle>, wifiStrength : Double) : ArrayList<Particle>  {
+
+        var x = 0
+        for (particle in predictedParticles) {
+            val dx = particle.position.x - previousParticles[x].position.x
+            val dy = particle.position.y - previousParticles[x].position.y
+            val dr = 0;
+            x++
+//            val positionComponent1 = sqrt(Math.pow(newX, 2.0) + Math.pow(newY, 2.0))
+            val positionComponent2 = Math.atan2(dy, dx) - atan2(particle.dy, particle.dx)
+//            val positionComponent3 = Math.atan2(-dy, -dx) - atan2(particle.position.dy, particle.position.dx)
+
+            val const1 = 1
+            val const2 = 1
+            val const3 = 1
+
+            val power1 = -Math.pow(dx - particle.dx, 2.0) / 2 * const1 * const1
+            val power2 = -Math.pow(dy - particle.dy, 2.0) / 2 * const1 * const1
+//            val power3 = -Math.pow()
+
+            val probability = 1 / (sqrt(2 * Math.PI) * const1) * Math.pow(Math.E, power1) * 1 / sqrt(2 * Math.PI * const1) * Math.pow(Math.E, power2)
+            // Update weight and change in position
+            particle.weight = probability
+            particle.dx =  previousParticles[x].position.x - particle.position.x
+            particle.dy = previousParticles[x].position.y - particle.position.y
+        }
+
+        // Normalize the weights of the particles
+        normalizeWeights(predictedParticles)
+
+
+        val ESSThreshold = 0.5
+        if(calculateESS(predictedParticles) < ESSThreshold) {
+            ParticleFilter.resample(predictedParticles.toMutableList() as java.util.ArrayList<ParticleFilter.Particle>)
+        }
+
+        val wifiThreshold = 2000
+        for (particle in predictedParticles as ArrayList<Particle>) {
+            if( Math.abs(WifiHeatmap.getWifiStrength(particle.position.x.roundToInt(), particle.position.y.roundToInt()) - wifiStrength) > wifiThreshold) {
+                predictedParticles.remove(particle)
+            }
+        }
+
+        return predictedParticles as ArrayList<Particle>
+    }
+
     fun calculateMovement(
         magX: Double, magY: Double, wifiStrength : Double, gyroX: Double, gyroY: Double, accelX: Double, accelY: Double,
         particles: ArrayList<Particle>, deltaTime: Double
@@ -46,11 +92,6 @@ object ParticleFilter {
 
         val newX = (IntegrationData.currentPos.x)
         val newY = (IntegrationData.currentPos.y)
-        // Predict the new positions of the particles using the gyroscope reading
-
-//        predictedParticles = particles.map { particle ->
-//            Particle(Point(newX, newY), particle.weight)
-//        } as ArrayList<Particle>
 
         for (particle in predictedParticles) {
             val dx = newX - particle.position.x
@@ -210,6 +251,5 @@ object ParticleFilter {
             particle.weight /= weightSum
 
         }
-
     }
 }
