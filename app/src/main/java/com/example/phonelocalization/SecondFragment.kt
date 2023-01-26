@@ -146,8 +146,11 @@ class SecondFragment : Fragment() {
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
             )) - firstAngle ) + (( 2 * 3.14 /360) * 89)
+            val oldArr = arr
+            WifiReader.refresh(requireContext())
+            val wifiStrength = WifiReader.Wifi.signalStrength;
             arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
-
+            arr = ParticleFilter.particleFilter(arr, oldArr, wifiStrength.toDouble())
             var angle = ((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
@@ -195,6 +198,8 @@ class SecondFragment : Fragment() {
 
         mapImageView.setImageDrawable(BitmapDrawable(resources, bitmap))
     }
+
+
 }
 
 
