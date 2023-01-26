@@ -44,9 +44,9 @@ class SecondFragment : Fragment() {
     ): View? {
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         // binding.positionData.text = ParticleFilter.GeneratePositions()
-        val particle = ParticleFilter.Particle(ParticleFilter.Point(95.0, 150.0), 1.0, 0.0,0.0);
-        arr.add(particle)
-        binding.positionData.text = ParticleFilter.GeneratePositions().toString()
+        val particle = ParticleFilter.Particle(ParticleFilter.Point(95.0, 150.0), 1.0, 10.0, 10.0);
+        //arr.add(particle)
+        arr = ParticleFilter.GeneratePositions() as ArrayList<ParticleFilter.Particle>
         firstAngle = (calculateRotationAngle(
             SensorReader.Gyroscope.z.toDouble(),
             SensorReader.Gyroscope.timestamp
@@ -146,15 +146,16 @@ class SecondFragment : Fragment() {
             var diff = abs((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
-            )) - firstAngle ) + (( 2 * 3.14 /360) * 89)
-            arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
+            )) - firstAngle  + (( 2 * 3.14 /360) * 180) ) % 2 * 3.14
+            //arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
+
 
             var angle = ((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
             ) * 180 * 0.31830988618) % 360)
             binding.positionData.text = arr.toString() + "\n" + "speed: " + speedCalculator?.getSpeed()!!.toString() + "\n" + "angle: " + diff.toString() ;
-            drawMinimap(arr[0].position.x.toInt(), arr[0].position.y.toInt());
+            drawMinimap(arr);
         }.also { runnable = it }, delay.toLong())
 
 
@@ -166,33 +167,36 @@ class SecondFragment : Fragment() {
         _binding = null
     }
 
-    fun drawMinimap(x: Int, y: Int) {
+    fun drawMinimap(particles: ArrayList<ParticleFilter.Particle>) {
         val mapImageView: ImageView = binding.ivFloorMap
         val mapBitmap: Bitmap = (mapImageView.drawable).toBitmap()
 
         val bitmap = Bitmap.createBitmap(mapBitmap.width, mapBitmap.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         canvas.drawBitmap(
-            mapBitmap,
+            (mapImageView.drawable).toBitmap(),
             Rect(0, 0, mapBitmap.width, mapBitmap.height),
             Rect(0, 0, mapBitmap.width, mapBitmap.height),
             null
         )
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.color = Color.RED
-        canvas.drawCircle(
-            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
-            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
-            10.0f,
-            paint
-        )
-        paint.color = Color.MAGENTA
-        canvas.drawCircle(
-            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
-            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
-            10.0f,
-            paint
-        )
+
+        for (p in particles) {
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.color = Color.RED
+            canvas.drawCircle(
+                (p.position.x.toFloat() / 531) * mapBitmap.width.toFloat(),
+                (p.position.y.toFloat() / 449) * mapBitmap.height.toFloat(),
+                10.0f,
+                paint
+            )
+            paint.color = Color.MAGENTA
+            canvas.drawCircle(
+                (p.position.x.toFloat() / 531) * mapBitmap.width.toFloat(),
+                (p.position.y.toFloat() / 449) * mapBitmap.height.toFloat(),
+                10.0f,
+                paint
+            )
+        }
 
         mapImageView.setImageDrawable(BitmapDrawable(resources, bitmap))
     }

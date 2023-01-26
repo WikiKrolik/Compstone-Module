@@ -182,7 +182,7 @@ object ParticleFilter {
        val list = arrayListOf<Particle>()
 
        var a: Int = 0
-       while (a <= 10){
+       while (a <= 50){
            var x: Double =  ((0 .. 530).random()).toDouble()
            var y: Double = ((0.. 488).random()).toDouble()
            var pair = Particle(Point(x, y), 1.0, 0.0, 0.0)
