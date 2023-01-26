@@ -30,7 +30,6 @@ class SecondFragment : Fragment() {
     private var _binding: FragmentSecondBinding? = null
     var handler: Handler = Handler()
     var runnable: Runnable? = null
-    val clearMapImageView: ImageView = null
     var delay = 250
     var firstAngle = 0.0;
     private var speedCalculator : SpeedCalculator? = null
@@ -45,15 +44,14 @@ class SecondFragment : Fragment() {
     ): View? {
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         // binding.positionData.text = ParticleFilter.GeneratePositions()
-        val particle = ParticleFilter.Particle(ParticleFilter.Point(95.0, 150.0), 1.0);
-        arr.add(particle)
-        binding.positionData.text = ParticleFilter.GeneratePositions().toString()
+        val particle = ParticleFilter.Particle(ParticleFilter.Point(95.0, 150.0), 1.0, 10.0, 10.0);
+        //arr.add(particle)
+        arr = ParticleFilter.GeneratePositions() as ArrayList<ParticleFilter.Particle>
         firstAngle = (calculateRotationAngle(
             SensorReader.Gyroscope.z.toDouble(),
             SensorReader.Gyroscope.timestamp
         ))
         speedCalculator = SpeedCalculator(requireContext())
-        val clearMapImageView: ImageView = binding.ivFloorMap
         return binding.root
     }
 
@@ -152,7 +150,7 @@ class SecondFragment : Fragment() {
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
             )) - firstAngle  + (( 2 * 3.14 /360) * 180) ) % 2 * 3.14
-            arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
+            //arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
 
             var angle = ((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
@@ -178,7 +176,7 @@ class SecondFragment : Fragment() {
         val bitmap = Bitmap.createBitmap(mapBitmap.width, mapBitmap.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         canvas.drawBitmap(
-            clearMapImageView,
+            (mapImageView.drawable).toBitmap(),
             Rect(0, 0, mapBitmap.width, mapBitmap.height),
             Rect(0, 0, mapBitmap.width, mapBitmap.height),
             null
@@ -188,15 +186,15 @@ class SecondFragment : Fragment() {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.color = Color.RED
             canvas.drawCircle(
-                (x.toFloat() / 531) * mapBitmap.width.toFloat(),
-                (y.toFloat() / 449) * mapBitmap.height.toFloat(),
+                (p.position.x.toFloat() / 531) * mapBitmap.width.toFloat(),
+                (p.position.y.toFloat() / 449) * mapBitmap.height.toFloat(),
                 10.0f,
                 paint
             )
             paint.color = Color.MAGENTA
             canvas.drawCircle(
-                (x.toFloat() / 531) * mapBitmap.width.toFloat(),
-                (y.toFloat() / 449) * mapBitmap.height.toFloat(),
+                (p.position.x.toFloat() / 531) * mapBitmap.width.toFloat(),
+                (p.position.y.toFloat() / 449) * mapBitmap.height.toFloat(),
                 10.0f,
                 paint
             )
