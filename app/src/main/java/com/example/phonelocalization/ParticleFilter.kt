@@ -91,6 +91,11 @@ object ParticleFilter {
         val totalWeight = updatedParticles.map { it.weight }.sum()
         val normalizedParticles = updatedParticles.map { Particle(it.position, it.weight / totalWeight, it.dx,it.dy) }
 
+        val ESSThreshold = 0.5
+        if(calculateESS(normalizedParticles) < ESSThreshold) {
+            resample(normalizedParticles.toMutableList() as ArrayList<Particle>)
+        }
+
         return normalizedParticles as ArrayList<Particle>
     }
 
@@ -144,7 +149,7 @@ object ParticleFilter {
        return list;
     }
 
-    fun Resample(particles : ArrayList<Particle>){
+    public fun resample(particles : ArrayList<Particle>){
         //Sort the list of particles by their weight
         particles.sortedBy { it.weight }
 
@@ -164,43 +169,43 @@ object ParticleFilter {
                 particles.remove(p)
             }
         }
-        fun normalizeWeights(particles: ArrayList<Particle>) {
-
-            var weightSum = 0.0
-
-            for (particle in particles) {
-
-                weightSum += particle.weight
-
-            }
-
-            for (particle in particles) {
-
-                particle.weight /= weightSum
-
-            }
-
-        }
-        fun calculateESS(particles: ArrayList<Particle>): Double {
-
-            var weightSum = 0.0
-
-            var weightSquaredSum = 0.0
-
-            for (particle in particles) {
-
-                weightSum += particle.weight
-
-                weightSquaredSum += particle.weight * particle.weight
-
-            }
-
-            return weightSum * weightSum / weightSquaredSum
-        }
 //        //Copy the particle with the biggest weight, as many times, as many particles have been deleted in this iteration.
 //        for(i in 0..numOfParticlesToRemove){
 //            particles.add(Particle(maxParticle.x, maxParticle.y, maxParticle.weight))
 //        }
+
+    }
+    fun calculateESS(particles: List<Particle>): Double {
+
+        var weightSum = 0.0
+
+        var weightSquaredSum = 0.0
+
+        for (particle in particles) {
+
+            weightSum += particle.weight
+
+            weightSquaredSum += particle.weight * particle.weight
+
+        }
+
+        return weightSum * weightSum / weightSquaredSum
+    }
+    fun normalizeWeights(particles: ArrayList<Particle>) {
+
+        var weightSum = 0.0
+
+        for (particle in particles) {
+
+            weightSum += particle.weight
+
+        }
+
+        for (particle in particles) {
+
+            particle.weight /= weightSum
+
+        }
 
     }
 }
