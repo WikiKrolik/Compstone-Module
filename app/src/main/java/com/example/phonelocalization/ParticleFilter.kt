@@ -1,9 +1,5 @@
 package com.example.phonelocalization
 
-import android.graphics.Point
-import android.hardware.SensorEvent
-import kotlinx.coroutines.processNextEventInCurrentThread
-import java.lang.String
 import java.util.*
 import kotlin.Boolean
 import kotlin.Double
@@ -25,7 +21,7 @@ object ParticleFilter {
     var IntegrationData = PositionVelocityData(ParticleFilter.Point(0.0,0.0), ParticleFilter.Point(0.0,0.0),ParticleFilter.Point(0.0,0.0),ParticleFilter.Point(0.0,0.0))
 
     fun calculateMovement(
-        magX: Double, magY: Double, gyroX: Double, gyroY: Double, accelX: Double, accelY: Double,
+        magX: Double, magY: Double, wifiStrength : Double, gyroX: Double, gyroY: Double, accelX: Double, accelY: Double,
         particles: ArrayList<Particle>, deltaTime: Double
     ): ArrayList<Particle> {
         var predictedParticles = particles
@@ -62,7 +58,7 @@ object ParticleFilter {
             val dr = 0;
 
 //            val positionComponent1 = sqrt(Math.pow(newX, 2.0) + Math.pow(newY, 2.0))
-//            val positionComponent2 = Math.atan2(dy, dx) - atan2(particle.position.dy, particle.position.dx)
+            val positionComponent2 = Math.atan2(dy, dx) - atan2(particle.dy, particle.dx)
 //            val positionComponent3 = Math.atan2(-dy, -dx) - atan2(particle.position.dy, particle.position.dx)
 
             val const1 = 1
@@ -71,6 +67,7 @@ object ParticleFilter {
 
             val power1 = -Math.pow(dx - particle.dx, 2.0) / 2 * const1 * const1
             val power2 = -Math.pow(dy - particle.dy, 2.0) / 2 * const1 * const1
+//            val power3 = -Math.pow()
 
             val probability = 1 / (sqrt(2 * Math.PI) * const1) * Math.pow(Math.E, power1) * 1 / sqrt(2 * Math.PI * const1) * Math.pow(Math.E, power2)
             // Update weight and change in position
@@ -94,6 +91,13 @@ object ParticleFilter {
         val ESSThreshold = 0.5
         if(calculateESS(normalizedParticles) < ESSThreshold) {
             resample(normalizedParticles.toMutableList() as ArrayList<Particle>)
+        }
+
+        val wifiThreshold = 2000
+        for (particle in normalizedParticles as ArrayList<Particle>) {
+            if( Math.abs(WifiHeatmap.getWifiStrength(particle.position.x.roundToInt(), particle.position.y.roundToInt()) - wifiStrength) > wifiThreshold) {
+                normalizedParticles.remove(particle)
+            }
         }
 
         return normalizedParticles as ArrayList<Particle>
@@ -149,7 +153,7 @@ object ParticleFilter {
        return list;
     }
 
-    public fun resample(particles : ArrayList<Particle>){
+    fun resample(particles : ArrayList<Particle>){
         //Sort the list of particles by their weight
         particles.sortedBy { it.weight }
 
@@ -168,12 +172,12 @@ object ParticleFilter {
                 numOfParticlesToRemove++
                 particles.remove(p)
             }
+
         }
 //        //Copy the particle with the biggest weight, as many times, as many particles have been deleted in this iteration.
 //        for(i in 0..numOfParticlesToRemove){
 //            particles.add(Particle(maxParticle.x, maxParticle.y, maxParticle.weight))
 //        }
-
     }
     fun calculateESS(particles: List<Particle>): Double {
 
