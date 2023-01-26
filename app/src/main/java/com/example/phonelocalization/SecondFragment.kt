@@ -44,7 +44,8 @@ class SecondFragment : Fragment() {
     ): View? {
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         // binding.positionData.text = ParticleFilter.GeneratePositions()
-        arr = ParticleFilter.GeneratePositions() as ArrayList<ParticleFilter.Particle>
+        val particle = ParticleFilter.Particle(ParticleFilter.Point(95.0, 150.0), 1.0);
+        arr.add(particle)
         binding.positionData.text = ParticleFilter.GeneratePositions().toString()
         firstAngle = (calculateRotationAngle(
             SensorReader.Gyroscope.z.toDouble(),
@@ -118,9 +119,12 @@ class SecondFragment : Fragment() {
             y = (x * tan(angle))
 
             //Change signs if needed.
-            if(angle in 180f..270f || angle in 270f..360f)
+            val a = ( 2 * 3.14 /360) * 180
+            val b = ( 2 * 3.14 /360) * 270
+            val c = ( 2 * 3.14 /360) * 360
+            if((angle > a && angle < b) || (angle > b && angle < c))
                 y = - y
-            if(angle in 0f..180f)
+            if(angle > 0 && angle < a)
                 x = - x
 
             //Shift the particles by the distance, expressed as pixels.
@@ -145,7 +149,7 @@ class SecondFragment : Fragment() {
             var diff = abs((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
-            )) - firstAngle ) + (( 2 * 3.14 /360) * 89)
+            )) - firstAngle  + (( 2 * 3.14 /360) * 180) ) % 2 * 3.14
             arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
 
             var angle = ((calculateRotationAngle(
