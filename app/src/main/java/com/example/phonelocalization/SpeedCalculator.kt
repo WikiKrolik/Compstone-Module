@@ -39,6 +39,8 @@ class SpeedCalculator(private val context: Context) {
                 if(errorTerminator == 0){
                     speed = 0f
                     errorTerminator = 10
+                    vx = 0.0
+                    vy = 0.0
                 }
                 if (timestamp != 0L && (abs(event.values[0]) > 0.5 || abs(event.values[1]) > 0.5)) {
                     val dT: Float = (event.timestamp - timestamp) * NS2S
@@ -51,8 +53,7 @@ class SpeedCalculator(private val context: Context) {
                     speed = Math.sqrt(vx * vx + vy * vy).toFloat()
                     if (speed < 0.01) {
                         speed = 0f
-                        vx = 0.0
-                        vy = 0.0
+
                     }
                 }
                 else

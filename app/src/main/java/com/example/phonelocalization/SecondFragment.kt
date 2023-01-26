@@ -30,7 +30,7 @@ class SecondFragment : Fragment() {
     private var _binding: FragmentSecondBinding? = null
     var handler: Handler = Handler()
     var runnable: Runnable? = null
-    var delay = 10
+    var delay = 250
     var firstAngle = 0.0;
     private var speedCalculator : SpeedCalculator? = null
 
@@ -49,7 +49,7 @@ class SecondFragment : Fragment() {
         firstAngle = (calculateRotationAngle(
             SensorReader.Gyroscope.z.toDouble(),
             SensorReader.Gyroscope.timestamp
-        ) * 180 * 0.31830988618) % 360
+        ))
         speedCalculator = SpeedCalculator(requireContext())
         return binding.root
     }
@@ -103,7 +103,7 @@ class SecondFragment : Fragment() {
 
     fun shiftParticles(particles : ArrayList<ParticleFilter.Particle>, speed : Double, angle : Double, dt : Float): ArrayList<ParticleFilter.Particle> {
         //Calculate the distance in pixels, that the particles have to move.
-        var distance : Int = (speed * dt * NS2S * pixelToMetersRatio).roundToInt()
+        var distance : Double = (speed * dt * 1/ 1000 * pixelToMetersRatio)
 
         var x: Double
         var y: Double
@@ -142,10 +142,10 @@ class SecondFragment : Fragment() {
 //                SensorReader.Accelerometer.x.toDouble(), SensorReader.Accelerometer.y.toDouble(),
 //                arr, delay.toDouble()
 //            )
-            var diff = abs(((calculateRotationAngle(
+            var diff = abs((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
-            ) * 180 * 0.31830988618) % 360) - firstAngle)
+            )) - firstAngle ) + (( 2 * 3.14 /360) * 89)
             arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
 
             var angle = ((calculateRotationAngle(
@@ -153,9 +153,9 @@ class SecondFragment : Fragment() {
                 SensorReader.Gyroscope.timestamp
             ) * 180 * 0.31830988618) % 360)
             binding.positionData.text = arr.toString() + "\n" + "speed: " + speedCalculator?.getSpeed()!!.toString() + "\n" + "angle: " + diff.toString() ;
-            //
+            drawMinimap(arr[0].position.x.toInt(), arr[0].position.y.toInt());
         }.also { runnable = it }, delay.toLong())
-        drawMinimap(arr[0].position.x.toInt(), arr[0].position.y.toInt());
+
 
     }
 
@@ -182,14 +182,14 @@ class SecondFragment : Fragment() {
         canvas.drawCircle(
             (x.toFloat() / 531) * mapBitmap.width.toFloat(),
             (y.toFloat() / 449) * mapBitmap.height.toFloat(),
-            30.0f,
+            10.0f,
             paint
         )
         paint.color = Color.MAGENTA
         canvas.drawCircle(
             (x.toFloat() / 531) * mapBitmap.width.toFloat(),
             (y.toFloat() / 449) * mapBitmap.height.toFloat(),
-            20.0f,
+            10.0f,
             paint
         )
 
