@@ -169,7 +169,7 @@ class SecondFragment : Fragment() {
         _binding = null
     }
 
-    fun drawMinimap(x: Int, y: Int) {
+    fun drawMinimap(particles: ArrayList<ParticleFilter.Particle>) {
         val mapImageView: ImageView = binding.ivFloorMap
         val mapBitmap: Bitmap = (mapImageView.drawable).toBitmap()
 
@@ -181,21 +181,24 @@ class SecondFragment : Fragment() {
             Rect(0, 0, mapBitmap.width, mapBitmap.height),
             null
         )
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.color = Color.RED
-        canvas.drawCircle(
-            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
-            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
-            10.0f,
-            paint
-        )
-        paint.color = Color.MAGENTA
-        canvas.drawCircle(
-            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
-            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
-            10.0f,
-            paint
-        )
+
+        for (p in particles) {
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.color = Color.RED
+            canvas.drawCircle(
+                (x.toFloat() / 531) * mapBitmap.width.toFloat(),
+                (y.toFloat() / 449) * mapBitmap.height.toFloat(),
+                10.0f,
+                paint
+            )
+            paint.color = Color.MAGENTA
+            canvas.drawCircle(
+                (x.toFloat() / 531) * mapBitmap.width.toFloat(),
+                (y.toFloat() / 449) * mapBitmap.height.toFloat(),
+                10.0f,
+                paint
+            )
+        }
 
         mapImageView.setImageDrawable(BitmapDrawable(resources, bitmap))
     }
