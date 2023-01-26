@@ -30,6 +30,7 @@ class SecondFragment : Fragment() {
     private var _binding: FragmentSecondBinding? = null
     var handler: Handler = Handler()
     var runnable: Runnable? = null
+    val clearMapImageView: ImageView = null
     var delay = 250
     var firstAngle = 0.0;
     private var speedCalculator : SpeedCalculator? = null
@@ -52,6 +53,7 @@ class SecondFragment : Fragment() {
             SensorReader.Gyroscope.timestamp
         ))
         speedCalculator = SpeedCalculator(requireContext())
+        val clearMapImageView: ImageView = binding.ivFloorMap
         return binding.root
     }
 
@@ -157,7 +159,7 @@ class SecondFragment : Fragment() {
                 SensorReader.Gyroscope.timestamp
             ) * 180 * 0.31830988618) % 360)
             binding.positionData.text = arr.toString() + "\n" + "speed: " + speedCalculator?.getSpeed()!!.toString() + "\n" + "angle: " + diff.toString() ;
-            drawMinimap(arr[0].position.x.toInt(), arr[0].position.y.toInt());
+            drawMinimap(arr);
         }.also { runnable = it }, delay.toLong())
 
 
@@ -176,7 +178,7 @@ class SecondFragment : Fragment() {
         val bitmap = Bitmap.createBitmap(mapBitmap.width, mapBitmap.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         canvas.drawBitmap(
-            mapBitmap,
+            clearMapImageView,
             Rect(0, 0, mapBitmap.width, mapBitmap.height),
             Rect(0, 0, mapBitmap.width, mapBitmap.height),
             null
