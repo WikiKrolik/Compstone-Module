@@ -125,6 +125,8 @@ class SecondFragment : Fragment() {
                 x = - x
 
             //Shift the particles by the distance, expressed as pixels.
+            p.dx = Math.abs(p.position.x - x)
+            p.dy = Math.abs(p.position.y - y)
             p.position.x += x
             p.position.y += y
         }
@@ -152,13 +154,13 @@ class SecondFragment : Fragment() {
             var wifiStrength = WifiReader.Wifi.signalStrength
 
             arr = shiftParticles(arr, speedCalculator?.getSpeed()!!.toDouble(), diff, delay.toFloat())
-            arr = ParticleFilter.particleFilter(arr,oldArr,wifiStrength.toDouble())
+            arr = ParticleFilter.particleFilter(arr,wifiStrength.toDouble())
             var angle = ((calculateRotationAngle(
                 SensorReader.Gyroscope.z.toDouble(),
                 SensorReader.Gyroscope.timestamp
             ) * 180 * 0.31830988618) % 360)
             binding.positionData.text = arr.toString() + "\n" + "speed: " + speedCalculator?.getSpeed()!!.toString() + "\n" + "angle: " + diff.toString() ;
-            drawMinimap(arr[0].position.x.toInt(), arr[0].position.y.toInt());
+            drawMinimap(arr);
         }.also { runnable = it }, delay.toLong())
 
 
@@ -170,7 +172,7 @@ class SecondFragment : Fragment() {
         _binding = null
     }
 
-    fun drawMinimap(x: Int, y: Int) {
+    fun drawMinimap(particles: ArrayList<ParticleFilter.Particle>) {
         val mapImageView: ImageView = binding.ivFloorMap
         val mapBitmap: Bitmap = (mapImageView.drawable).toBitmap()
 
@@ -182,21 +184,23 @@ class SecondFragment : Fragment() {
             Rect(0, 0, mapBitmap.width, mapBitmap.height),
             null
         )
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.color = Color.RED
-        canvas.drawCircle(
-            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
-            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
-            10.0f,
-            paint
-        )
-        paint.color = Color.MAGENTA
-        canvas.drawCircle(
-            (x.toFloat() / 531) * mapBitmap.width.toFloat(),
-            (y.toFloat() / 449) * mapBitmap.height.toFloat(),
-            10.0f,
-            paint
-        )
+        for (p in particles) {
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.color = Color.RED
+            canvas.drawCircle(
+                (p.position.x.toFloat() / 531) * mapBitmap.width.toFloat(),
+                (p.position.y.toFloat() / 449) * mapBitmap.height.toFloat(),
+                10.0f,
+                paint
+            )
+            paint.color = Color.MAGENTA
+            canvas.drawCircle(
+                (p.position.x.toFloat() / 531) * mapBitmap.width.toFloat(),
+                (p.position.y.toFloat() / 449) * mapBitmap.height.toFloat(),
+                10.0f,
+                paint
+            )
+        }
 
         mapImageView.setImageDrawable(BitmapDrawable(resources, bitmap))
     }
