@@ -140,7 +140,39 @@ object ParticleFilter {
                 particles.remove(p)
             }
         }
+        fun normalizeWeights(particles: ArrayList<Particle>) {
 
+            var weightSum = 0.0
+
+            for (particle in particles) {
+
+                weightSum += particle.weight
+
+            }
+
+            for (particle in particles) {
+
+                particle.weight /= weightSum
+
+            }
+
+        }
+        fun calculateESS(particles: ArrayList<Particle>): Double {
+
+            var weightSum = 0.0
+
+            var weightSquaredSum = 0.0
+
+            for (particle in particles) {
+
+                weightSum += particle.weight
+
+                weightSquaredSum += particle.weight * particle.weight
+
+            }
+
+            return weightSum * weightSum / weightSquaredSum
+        }
 //        //Copy the particle with the biggest weight, as many times, as many particles have been deleted in this iteration.
 //        for(i in 0..numOfParticlesToRemove){
 //            particles.add(Particle(maxParticle.x, maxParticle.y, maxParticle.weight))
